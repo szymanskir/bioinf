@@ -6,8 +6,10 @@
 import pytest
 
 from bioinf.sequence import (
+    Direction,
     ISequenceAlignmentAlgorithm,
     NeedlemanWunschSequenceAlignmentAlgorithm,
+    PathToAlignmentConverter,
     SequenceAlignmentResult,
 )
 
@@ -17,6 +19,20 @@ def test_needleman_wunsch_alignment_score():
         match=5, mismatch=-5, gap=-2
     )
     result: SequenceAlignmentResult = algorithm.align(
-        left_sequence="GAAC", right_sequence="CAAGAC"
+        left_sequence="MARS", right_sequence="SMART"
     )
-    assert result.score == 7
+    assert len(result.alignments) == 2
+    assert result.score == 9
+
+
+def test_path_to_alignment_converter():
+    converter = PathToAlignmentConverter()
+    alignment = converter.convert(
+        [Direction.LEFT, Direction.UP, Direction.DIAG, Direction.DIAG, Direction.LEFT],
+        "EFG",
+        "ABCD",
+    )
+
+    assert alignment.left_sequence_alignment == "-EFG-"
+    assert alignment.right_sequence_alignment == "ABC-D"
+
