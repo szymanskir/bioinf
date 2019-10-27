@@ -12,7 +12,9 @@ def read_config(filepath: str) -> SequenceAlignmentAlgorithmConfig:
     config: ConfigParser = ConfigParser()
     config.read(filepath)
     return SequenceAlignmentAlgorithmConfig(
-        config["DEFAULT"].getint("match"),
-        config["DEFAULT"].getint("mismatch"),
-        config["DEFAULT"].getint("gap"),
+        match=config["DEFAULT"].getint("match"),
+        mismatch=config["DEFAULT"].getint("mismatch"),
+        gap=config["DEFAULT"].getint("gap"),
+        max_seq_len=config["DEFAULT"].getint("max_seq_len"),
+        max_number_path=config["DEFAULT"].getint("max_number_path"),
     )

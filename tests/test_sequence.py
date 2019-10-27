@@ -8,6 +8,7 @@ import pytest
 from bioinf.sequence import (
     Direction,
     ISequenceAlignmentAlgorithm,
+    SequenceAlignmentAlgorithmConfig,
     NeedlemanWunschSequenceAlignmentAlgorithm,
     PathToAlignmentConverter,
     SequenceAlignmentResult,
@@ -15,8 +16,11 @@ from bioinf.sequence import (
 
 
 def test_needleman_wunsch_alignment_score():
+    config: SequenceAlignmentAlgorithmConfig = SequenceAlignmentAlgorithmConfig(
+        match=5, mismatch=-5, gap=-2, max_seq_len=10, max_number_path=5
+    )
     algorithm: ISequenceAlignmentAlgorithm = NeedlemanWunschSequenceAlignmentAlgorithm(
-        match=5, mismatch=-5, gap=-2
+        config=config
     )
     result: SequenceAlignmentResult = algorithm.align(
         left_sequence="MARS", right_sequence="SMART"

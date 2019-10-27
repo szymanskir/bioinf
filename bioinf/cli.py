@@ -7,11 +7,13 @@ from .sequence import NeedlemanWunschSequenceAlignmentAlgorithm
 from .utils import read_config, read_sequence
 
 
+class ToLongSequenceError(Exception):
+    pass
+
+
 @click.group()
 def main(args=None):
     """Console script for bioinf."""
-    click.echo("Replace this message by putting your code into " "bioinf.cli.main")
-    click.echo("See click documentation at https://click.palletsprojects.com/")
     return 0
 
 
@@ -23,7 +25,14 @@ def align(a: str, b: str, c: str):
     left_sequence: str = read_sequence(a)
     right_sequence: str = read_sequence(b)
     config = read_config(c)
-    algorithm = NeedlemanWunschSequenceAlignmentAlgorithm.from_config(config)
+    algorithm = NeedlemanWunschSequenceAlignmentAlgorithm(config)
+
+    if (
+        len(left_sequence) > config.max_seq_len
+        or len(right_sequence) > config.max_seq_len
+    ):
+        raise ToLongSequenceError
+
     result = algorithm.align(left_sequence, right_sequence)
     click.echo(result)
 
