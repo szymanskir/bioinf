@@ -8,6 +8,7 @@ black==19.3b0
 certifi==2019.9.11
 chardet==3.0.4
 Click==7.0
+configparser==4.0.2
 cookiecutter==1.6.0
 entrypoints==0.3
 flake8==3.7.8

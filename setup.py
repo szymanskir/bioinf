@@ -5,48 +5,40 @@
 
 from setuptools import setup, find_packages
 
-with open('README.rst') as readme_file:
-    readme = readme_file.read()
+requirements = ["Click>=7.0"]
 
-requirements = ['Click>=7.0', ]
+setup_requirements = ["pytest-runner"]
 
-setup_requirements = ['pytest-runner', ]
-
-test_requirements = ['pytest>=3', ]
+test_requirements = ["pytest>=3"]
 
 setup(
     author="Ryszard Szymanski",
-    python_requires='>=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*',
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*",
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
-        'Intended Audience :: Developers',
-        'License :: OSI Approved :: MIT License',
-        'Natural Language :: English',
+        "Development Status :: 2 - Pre-Alpha",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: MIT License",
+        "Natural Language :: English",
         "Programming Language :: Python :: 2",
-        'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
     description="Python Boilerplate contains all the boilerplate you need to create a Python package.",
-    entry_points={
-        'console_scripts': [
-            'bioinf=bioinf.cli:main',
-        ],
-    },
+    entry_points={"console_scripts": ["bioinf=bioinf.cli:main"]},
     install_requires=requirements,
     license="MIT license",
-    long_description=readme,
     include_package_data=True,
-    keywords='bioinf',
-    name='bioinf',
-    packages=find_packages(include=['bioinf', 'bioinf.*']),
+    keywords="bioinf",
+    name="bioinf",
+    packages=find_packages(include=["bioinf", "bioinf.*"]),
     setup_requires=setup_requirements,
-    test_suite='tests',
+    test_suite="tests",
     tests_require=test_requirements,
-    url='https://github.com/szymanskir/bioinf',
-    version='0.1.0',
+    url="https://github.com/szymanskir/bioinf",
+    version="0.1.0",
     zip_safe=False,
 )

@@ -1,16 +1,15 @@
 from abc import ABC, abstractclassmethod
 from dataclasses import dataclass
-from enum import Enum
 from itertools import product
 from typing import Dict, List, Tuple
 
 import numpy as np
 
+from .path import Direction, Path
 
-class Direction(Enum):
-    DIAG = 0
-    LEFT = 1
-    UP = 2
+
+class ToLongSequenceError(Exception):
+    pass
 
 
 @dataclass
@@ -62,9 +61,9 @@ class PathFinder:
             self._find_all_paths_helper(next_cell)
             self._current_path.pop()
 
-    def find_all_paths(self):
-        self._paths: List[List[Direction]] = []
-        self._current_path: List[Direction] = []
+    def find_all_paths(self) -> List[Path]:
+        self._paths: List[Path] = []
+        self._current_path: Path = Path.empty()
         self._find_all_paths_helper((self._row_count - 1, self._col_count - 1))
 
         return self._paths
@@ -72,9 +71,7 @@ class PathFinder:
 
 class PathToAlignmentConverter:
     @staticmethod
-    def convert(
-        path: List[Direction], left_sequence: str, right_sequence: str
-    ) -> Alignment:
+    def convert(path: Path, left_sequence: str, right_sequence: str) -> Alignment:
         left_sequence_alignment = ""
         right_sequence_alignment = ""
         left_index = len(left_sequence)
@@ -90,13 +87,13 @@ class PathToAlignmentConverter:
                 right_sequence_alignment = (
                     right_sequence[right_index] + right_sequence_alignment
                 )
-            if direction == Direction.UP:
+            elif direction == Direction.UP:
                 left_index = left_index - 1
                 left_sequence_alignment = (
                     left_sequence[left_index] + left_sequence_alignment
                 )
                 right_sequence_alignment = "-" + right_sequence_alignment
-            if direction == Direction.LEFT:
+            elif direction == Direction.LEFT:
                 right_index = right_index - 1
                 left_sequence_alignment = "-" + left_sequence_alignment
                 right_sequence_alignment = (
@@ -136,6 +133,17 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
     def __init__(self, config: SequenceAlignmentAlgorithmConfig):
         self._config = config
 
+    def _validate_sequence(self, left_sequence: str, right_sequence: str):
+        if len(left_sequence) > self._config.max_seq_len:
+            raise ToLongSequenceError(
+                f"Left sequence is longer than {self._config.max_seq_len}"
+            )
+
+        if len(right_sequence) > self._config.max_seq_len:
+            raise ToLongSequenceError(
+                f"Right sequence is longer than {self._config.max_seq_len}"
+            )
+
     def _create_score_matrix(self, row_count: int, col_count: int) -> np.array:
         score_matrix: np.array = np.zeros((row_count, col_count))
         score_matrix[1:, 0] = [self._config.gap * ind for ind in range(1, row_count)]
@@ -147,20 +155,28 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
     ) -> Dict[Tuple[int, int], List[Direction]]:
         adjacency_list: Dict[Tuple[int, int], List[Direction]] = dict()
 
-        for ind in product(range(row_count), range(col_count)):
-            adjacency_list[ind] = []
-
         for row in range(1, row_count):
-            adjacency_list[(row, 0)].append(Direction.UP)
+            adjacency_list[(row, 0)] = [Direction.UP]
 
         for col in range(1, col_count):
-            adjacency_list[(0, col)].append(Direction.LEFT)
+            adjacency_list[(0, col)] = [Direction.LEFT]
 
         return adjacency_list
 
+    def _retrieve_paths(self, adjacency_list, row_count, col_count):
+        path_finder: PathFinder = PathFinder(
+            adjacency_list, row_count, col_count, self._config.max_number_path
+        )
+        paths: List[Path] = path_finder.find_all_paths()
+
+        return paths
+
     def align(self, left_sequence: str, right_sequence: str) -> SequenceAlignmentResult:
-        row_count = len(left_sequence) + 1
-        col_count = len(right_sequence) + 1
+        self._validate_sequence(
+            left_sequence=left_sequence, right_sequence=right_sequence
+        )
+        row_count: int = len(left_sequence) + 1
+        col_count: int = len(right_sequence) + 1
         score_matrix: np.array = self._create_score_matrix(row_count, col_count)
         adjacency_list = self._create_adjacency_list(row_count, col_count)
 
@@ -171,29 +187,28 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
                 else:
                     diag_weight = self._config.mismatch
 
-                current_score = max(
-                    score_matrix[row, col - 1] + self._config.gap,
-                    score_matrix[row - 1, col - 1] + diag_weight,
-                    score_matrix[row - 1, col] + self._config.gap,
+                available_score = np.array(
+                    [
+                        score_matrix[row, col - 1] + self._config.gap,
+                        score_matrix[row - 1, col - 1] + diag_weight,
+                        score_matrix[row - 1, col] + self._config.gap,
+                    ]
                 )
 
-                if current_score == score_matrix[row, col - 1] + self._config.gap:
-                    adjacency_list[(row, col)].append(Direction.LEFT)
-                if current_score == score_matrix[row - 1, col - 1] + diag_weight:
-                    adjacency_list[(row, col)].append(Direction.DIAG)
-                if current_score == score_matrix[row - 1, col] + self._config.gap:
-                    adjacency_list[(row, col)].append(Direction.UP)
+                available_paths = np.array(
+                    [Direction.LEFT, Direction.DIAG, Direction.UP]
+                )
+
+                current_score = np.max(available_score)
+                current_paths = available_paths[available_score == current_score]
 
                 score_matrix[row, col] = current_score
+                adjacency_list[(row, col)] = current_paths.tolist()
 
         score: int = score_matrix[row_count - 1, col_count - 1]
-        path_finder: PathFinder = PathFinder(
-            adjacency_list, row_count, col_count, self._config.max_number_path
-        )
-        paths: List[List[Direction]] = path_finder.find_all_paths()
+        paths = self._retrieve_paths(adjacency_list, row_count, col_count)
         alignments: List[Alignment] = [
             PathToAlignmentConverter.convert(path, left_sequence, right_sequence)
             for path in paths
         ]
-
         return SequenceAlignmentResult(score, alignments)
