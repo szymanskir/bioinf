@@ -21,14 +21,19 @@ def main(args=None):
 @click.option("-a", type=click.Path(exists=True))
 @click.option("-b", type=click.Path(exists=True))
 @click.option("-c", type=click.Path(exists=True))
-def align(a: str, b: str, c: str):
+@click.option("-o", type=click.Path())
+def align(a: str, b: str, c: str, o: str):
     left_sequence: Sequence = read_sequence(a)
     right_sequence: Sequence = read_sequence(b)
     try:
         config = read_config(c)
         algorithm = NeedlemanWunschSequenceAlignmentAlgorithm(config)
         result = algorithm.align(left_sequence, right_sequence)
-        click.echo(result)
+        if o:
+            with open(o, "w") as f:
+                f.write(str(result))
+        else:
+            click.echo(result)
     except MissingConfigFieldError as e:
         click.echo(str(e))
     except TooLongSequenceError:
