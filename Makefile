@@ -51,6 +51,7 @@ clean-test: ## remove test and coverage artifacts
 	rm -fr .pytest_cache
 
 lint: ## check style with flake8
+	mypy bioinf tests --ignore-missing-imports
 	flake8 bioinf tests
 
 test: ## run tests quickly with the default Python

@@ -5,6 +5,7 @@ python: "3.7.0"
 cache: 
   pip: true
 install:
+  - pip install -r requirements_dev.txt
   - make install 
 script:
   - make lint

@@ -16,6 +16,12 @@ class TooLongSequenceError(Exception):
 
 @dataclass
 class SequenceAlignmentResult:
+    """Class representing a sequence alignment result.
+    Attributes:
+        score (int): Alignment score value.
+        alignments (List[Alignment]): list of possible sequence alignments.
+    """
+
     score: int
     alignments: List[Alignment]
 
@@ -27,6 +33,16 @@ class SequenceAlignmentResult:
 
 @dataclass
 class SequenceAlignmentAlgorithmConfig:
+    """Class representing a configuration of a Sequence Alignment Algorithm.
+
+    Note: It should contain the following fields:
+            - match (int) - score value for a sequence match
+            - mistmatch (int) - score value for a sequence mismatch
+            - gap (int) - score value for adding a gap
+            - max_seq_len (int) - maximum length of a sequence
+            - max_number_path (int) - maximum number of paths to retrieve
+    """
+
     match: int
     mismatch: int
     gap: int
@@ -35,11 +51,23 @@ class SequenceAlignmentAlgorithmConfig:
 
 
 class ISequenceAlignmentAlgorithm(ABC):
+    """Interface representing an alignment algorithm
+    """
+
     @abstractclassmethod
     def align(
         self, left_sequence: Sequence, right_sequence: Sequence
     ) -> SequenceAlignmentResult:
-        pass
+        """Aligns two sequences and returns possible best alignments.
+
+        Arguments:
+            left_sequence (Sequence) - first sequence to align
+            right_sequence (Sequence) - second sequence to align
+
+        Returns:
+            SequenceAlignmentResult - object containg the alignment
+                                      score and possible alignments.
+        """
 
 
 class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
