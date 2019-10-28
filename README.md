@@ -19,13 +19,14 @@ make install
 
 Sample files have been included in the repository. Run the following command for an example usage of the tool:
 ```
-bioinf align -a a.txt -b b.txt -c config.ini
+bioinf align -a a.txt -b b.txt -c config.ini -o output.txt
 ```
 
 # Configuration file
 In order to align protein sequence using the `bioinf` tool it is required to provide a configuration. The content of the example configuration file (`config.ini`) along with explanation of all fields is presented below:
 
 ```
+[DEFAULT]
 match = 5
 mismatch = -5
 gap = -2
