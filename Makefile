@@ -55,7 +55,7 @@ lint: ## check style with flake8
 	flake8 bioinf tests
 
 test: ## run tests quickly with the default Python
-	pytest --cov=bioinf tests/
+	pytest --cov-report xml --cov=bioinf tests/
 
 test-all: ## run tests on every Python version with tox
 	tox

@@ -11,4 +11,4 @@ script:
   - make lint
   - make tests
 after_success:
-  - codecov
+  - codecov --file coverage.xml
