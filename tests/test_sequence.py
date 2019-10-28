@@ -3,8 +3,6 @@
 
 """Tests for `bioinf` package."""
 
-import pytest
-
 from bioinf.converters import PathToAlignmentConverter
 from bioinf.path import Direction
 from bioinf.sequence import Sequence
@@ -40,4 +38,3 @@ def test_path_to_alignment_converter():
 
     assert alignment.left_sequence_alignment == "-EFG-"
     assert alignment.right_sequence_alignment == "ABC-D"
-

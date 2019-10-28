@@ -1,6 +1,5 @@
 from abc import ABC, abstractclassmethod
 from dataclasses import dataclass
-from itertools import product
 from typing import Dict, List, Tuple
 
 import numpy as np
@@ -111,7 +110,9 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
                     ]
                 )
 
-                available_paths = np.array([Direction.LEFT, Direction.DIAG, Direction.UP])
+                available_paths = np.array(
+                    [Direction.LEFT, Direction.DIAG, Direction.UP]
+                )
 
                 current_score = np.max(available_score)
                 current_paths = available_paths[available_score == current_score]
