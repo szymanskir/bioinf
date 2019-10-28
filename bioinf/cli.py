@@ -8,7 +8,7 @@ from .sequence_alignment import (
     NeedlemanWunschSequenceAlignmentAlgorithm,
     TooLongSequenceError,
 )
-from .utils import read_config, read_sequence
+from .utils import read_config, read_sequence, MissingConfigFieldError
 
 
 @click.group()
@@ -24,11 +24,13 @@ def main(args=None):
 def align(a: str, b: str, c: str):
     left_sequence: Sequence = read_sequence(a)
     right_sequence: Sequence = read_sequence(b)
-    config = read_config(c)
-    algorithm = NeedlemanWunschSequenceAlignmentAlgorithm(config)
     try:
+        config = read_config(c)
+        algorithm = NeedlemanWunschSequenceAlignmentAlgorithm(config)
         result = algorithm.align(left_sequence, right_sequence)
         click.echo(result)
+    except MissingConfigFieldError as e:
+        click.echo(str(e))
     except TooLongSequenceError as e:
         click.echo(f"One of the input sequences is longer than {config.max_seq_len}.")
 
