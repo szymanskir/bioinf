@@ -31,7 +31,7 @@ def align(a: str, b: str, c: str):
         click.echo(result)
     except MissingConfigFieldError as e:
         click.echo(str(e))
-    except TooLongSequenceError as e:
+    except TooLongSequenceError:
         click.echo(f"One of the input sequences is longer than {config.max_seq_len}.")
 
 

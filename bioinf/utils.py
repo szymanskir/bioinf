@@ -1,7 +1,6 @@
 from .sequence import Sequence
 from .sequence_alignment import SequenceAlignmentAlgorithmConfig
 from configparser import ConfigParser
-from typing import List
 
 
 class MissingConfigFieldError(Exception):
@@ -11,10 +10,10 @@ class MissingConfigFieldError(Exception):
 
 def read_sequence(filepath: str) -> Sequence:
     """Reads a protein sequence from the given file.
-    
+
     Arguments:
         filepath {str} -- file from which the sequence should be read.
-    
+
     Returns:
         (Sequence) -- sequence retrieved from the file.
     """
@@ -25,14 +24,15 @@ def read_sequence(filepath: str) -> Sequence:
 
 def read_config(filepath: str) -> SequenceAlignmentAlgorithmConfig:
     """Reads a config file from the given file.
-    
+
     Arguments:
         filepath {str} -- file from which the config should be read.
-    
+
     Raises:
         MissingConfigFieldError: if one of the required fields of
-            SequenceAlignmentAlgorithmConfig is missing than an appropriate error is based.
-    
+            SequenceAlignmentAlgorithmConfig is missing than an
+            appropriate error is based.
+
     Returns:
         SequenceAlignmentAlgorithmConfig -- [description]
     """
