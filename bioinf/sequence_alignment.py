@@ -71,6 +71,17 @@ class ISequenceAlignmentAlgorithm(ABC):
 
 
 class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
+    """Implementation of the Needleman-Wunsch Sequence alginment algorithm
+    
+    Arguments:
+        _config (SequenceAlignmentAlgorithmConfig): Configuration of the
+            sequence alignment algorithm.
+    
+    Raises:
+        TooLongSequenceError: When one of the input sequence exceeds the
+            length specified in the passed SequenceAlignmentAlgorithmConfig.
+    """
+
     def __init__(self, config: SequenceAlignmentAlgorithmConfig):
         self._config = config
 
