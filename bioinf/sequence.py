@@ -11,9 +11,6 @@ class Sequence:
     def __getitem__(self, index: int):
         return self._raw_sequence[index]
 
-    def __iter__(self):
-        return iter(self._raw_sequence)
-
     def __len__(self) -> int:
         return len(self._raw_sequence)
 

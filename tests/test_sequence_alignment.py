@@ -9,6 +9,7 @@ from bioinf.converters import PathToAlignmentConverter
 from bioinf.path import Direction
 from bioinf.sequence import Sequence
 from bioinf.sequence_alignment import (
+    Alignment,
     TooLongSequenceError,
     ISequenceAlignmentAlgorithm,
     SequenceAlignmentAlgorithmConfig,
@@ -55,3 +56,13 @@ def test_path_to_alignment_converter():
 
     assert alignment.left_sequence_alignment == "-EFG-"
     assert alignment.right_sequence_alignment == "ABC-D"
+
+
+def test_sequence_alignment_str():
+    result = SequenceAlignmentResult(
+        score=9, alignments=[Alignment(Sequence("ABC"), Sequence("ABC"))]
+    )
+
+    str_result = str(result)
+    assert "Score: 9" in str_result
+    assert "ABC\nABC" in str_result

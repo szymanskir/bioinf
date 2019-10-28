@@ -36,4 +36,6 @@ class PathToAlignmentConverter:
                     right_sequence[right_index] + right_sequence_alignment
                 )
 
-        return Alignment(left_sequence_alignment, right_sequence_alignment)
+        return Alignment(
+            Sequence(left_sequence_alignment), Sequence(right_sequence_alignment)
+        )
