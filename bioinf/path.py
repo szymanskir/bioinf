@@ -14,7 +14,7 @@ class Direction(Enum):
 
 class Path:
     """Class representing a Path -- a list of directions.
-    
+
     Attributes:
         _directions (List[Direction]): list of direction of which the
             path is composed.
