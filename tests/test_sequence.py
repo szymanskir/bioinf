@@ -5,12 +5,13 @@
 
 import pytest
 
-from bioinf.sequence import (
-    Direction,
+from bioinf.converters import PathToAlignmentConverter
+from bioinf.path import Direction
+from bioinf.sequence import Sequence
+from bioinf.sequence_alignment import (
     ISequenceAlignmentAlgorithm,
     SequenceAlignmentAlgorithmConfig,
     NeedlemanWunschSequenceAlignmentAlgorithm,
-    PathToAlignmentConverter,
     SequenceAlignmentResult,
 )
 
@@ -23,7 +24,7 @@ def test_needleman_wunsch_alignment_score():
         config=config
     )
     result: SequenceAlignmentResult = algorithm.align(
-        left_sequence="MARS", right_sequence="SMART"
+        left_sequence=Sequence("MARS"), right_sequence=Sequence("SMART")
     )
     assert len(result.alignments) == 2
     assert result.score == 9

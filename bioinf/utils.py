@@ -1,11 +1,12 @@
-from .sequence import SequenceAlignmentAlgorithmConfig
+from .sequence import Sequence
+from .sequence_alignment import SequenceAlignmentAlgorithmConfig
 from configparser import ConfigParser
 
 
-def read_sequence(filepath: str) -> str:
+def read_sequence(filepath: str) -> Sequence:
     with open(filepath, "r") as f:
-        sequence = f.read()
-    return sequence
+        raw_sequence = f.read()
+    return Sequence(raw_sequence)
 
 
 def read_config(filepath: str) -> SequenceAlignmentAlgorithmConfig:
