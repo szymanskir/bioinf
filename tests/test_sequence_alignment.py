@@ -50,12 +50,12 @@ def test_path_to_alignment_converter():
     converter = PathToAlignmentConverter()
     alignment = converter.convert(
         [Direction.LEFT, Direction.UP, Direction.DIAG, Direction.DIAG, Direction.LEFT],
-        "EFG",
-        "ABCD",
+        Sequence("EFG"),
+        Sequence("ABCD"),
     )
 
-    assert alignment.left_sequence_alignment == "-EFG-"
-    assert alignment.right_sequence_alignment == "ABC-D"
+    assert alignment.left_sequence_alignment._raw_sequence == "-EFG-"
+    assert alignment.right_sequence_alignment._raw_sequence == "ABC-D"
 
 
 def test_sequence_alignment_str():
@@ -64,5 +64,5 @@ def test_sequence_alignment_str():
     )
 
     str_result = str(result)
-    assert "Score: 9" in str_result
+    assert "Score = 9" in str_result
     assert "ABC\nABC" in str_result
