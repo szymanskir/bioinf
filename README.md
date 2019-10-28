@@ -1,4 +1,7 @@
 ![Travis CI](https://travis-ci.com/szymanskir/bioinf.svg?token=vMgapB9HzV6RFvox4Fiq&branch=master)
+![codecov](https://codecov.io/gh/szymanskir/bioinf/branch/master/graph/badge.svg)
+
+
 # Bioinf
 
 Python Implementation of the Needleman-Wunsch algorithm for bioinformatics classes at the Warsaw University of Technology.
