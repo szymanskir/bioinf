@@ -4,12 +4,22 @@ from typing import Dict, List, Tuple
 
 
 class Direction(Enum):
+    """Class representing possible directions
+    """
+
     DIAG = 0
     LEFT = 1
     UP = 2
 
 
 class Path:
+    """Class representing a Path -- a list of directions.
+    
+    Attributes:
+        _directions (List[Direction]): list of direction of which the
+            path is composed.
+    """
+
     def __init__(self, directions: List[Direction] = None):
         self._directions = [] if directions is None else directions.copy()
 
