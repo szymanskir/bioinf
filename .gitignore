@@ -7,3 +7,4 @@
 bioinf.egg-info/
 build/
 dist/
+coverage.xml
