@@ -9,6 +9,6 @@ install:
   - make install 
 script:
   - make lint
-  - make tests
+  - make test
 after_success:
   - codecov --file coverage.xml
