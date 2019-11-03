@@ -26,7 +26,7 @@ class SequenceAlignmentResult:
     alignments: List[Alignment]
 
     def __str__(self):
-        score_string: str = f"Score = {self.score}"
+        score_string: str = f"Score = {int(self.score)}"
         alignments_string = [str(alignment) for alignment in self.alignments]
         return score_string + "\n\n" + "\n\n".join(alignments_string)
 
