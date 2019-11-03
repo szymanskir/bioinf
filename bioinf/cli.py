@@ -11,7 +11,6 @@ from .utils import read_config, read_sequence
 @click.group()
 def main(args=None):
     """Console script for bioinf."""
-    return 0
 
 
 @main.command()
