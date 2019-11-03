@@ -28,18 +28,22 @@ In order to align protein sequence using the `bioinf` tool it is required to pro
 
 ```
 [DEFAULT]
-match = 5
-mismatch = -5
-gap = -2
-max_seq_len = 10
-max_number_path = 5
+same = 5
+diff = -5
+gap_penalty = -2
+max_seq_length = 10
+max_number_paths = 5
 ```
 
-`match` - score value for when sequence parts match
-`mismatch` - score value for when sequence parts do not match
-`gap` - score value when gap is insterted into one of the sequences
-`max_seq_len` - maximum length of a processed sequence
-`max_number_path` - maximal number of path alignemnts to retreive
+`same` - score value for when sequence parts match
+
+`diff` - score value for when sequence parts do not match
+
+`gap_penalty` - score value when gap is insterted into one of the sequences
+
+`max_seq_length` - maximum length of a processed sequence
+
+`max_number_paths` - maximal number of path alignemnts to retrieve
 
 # Credits
 This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
