@@ -4,11 +4,8 @@
 import sys
 import click
 from .sequence import Sequence
-from .sequence_alignment import (
-    NeedlemanWunschSequenceAlignmentAlgorithm,
-    TooLongSequenceError,
-)
-from .utils import read_config, read_sequence, MissingConfigFieldError
+from .sequence_alignment import NeedlemanWunschSequenceAlignmentAlgorithm
+from .utils import read_config, read_sequence
 
 
 @click.group()
