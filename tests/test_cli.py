@@ -8,38 +8,96 @@ import pytest
 from click.testing import CliRunner
 
 from bioinf import cli
+from os.path import dirname, join
+
+
+def get_relative_path(filepath: str):
+    return join(dirname(__file__), filepath)
 
 
 @pytest.fixture
-def response():
-    """Sample pytest fixture.
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
+def a_sequence_filepath():
+    return get_relative_path("resources/a.txt")
 
 
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
+@pytest.fixture
+def b_sequence_filepath():
+    return get_relative_path("resources/b.txt")
 
 
-def test_cli_too_long_input_error_handling():
+@pytest.fixture
+def along_sequence_filepath():
+    return get_relative_path("resources/along.txt")
+
+
+@pytest.fixture
+def config_filepath():
+    return get_relative_path("resources/config.ini")
+
+
+@pytest.fixture
+def config_missing_field_filepath():
+    return get_relative_path("resources/config_missing_field.ini")
+
+
+@pytest.fixture
+def wrong_fasta_no_description():
+    return get_relative_path("resources/wrong_fasta-no_description.txt")
+
+
+def test_cli_too_long_input_error_handling(
+    along_sequence_filepath, b_sequence_filepath, config_filepath
+):
     """Test the CLI."""
     runner = CliRunner()
     help_result = runner.invoke(
-        cli.align, ["-a", "along.txt", "-b", "b.txt", "-c", "config.ini"]
+        cli.align,
+        [
+            "-a",
+            along_sequence_filepath,
+            "-b",
+            b_sequence_filepath,
+            "-c",
+            config_filepath,
+        ],
     )
     assert help_result.exit_code == 0
-    assert "One of the input sequences is longer than" in help_result.output
+    assert "is longer than" in help_result.output
 
 
-def test_cli_too_wrong_config_error_handling():
-    """Test the CLI."""
+def test_cli_too_wrong_config_error_handling(
+    a_sequence_filepath, b_sequence_filepath, config_missing_field_filepath
+):
     runner = CliRunner()
     help_result = runner.invoke(
-        cli.align, ["-a", "a.txt", "-b", "b.txt", "-c", "config_missing.ini"]
+        cli.align,
+        [
+            "-a",
+            a_sequence_filepath,
+            "-b",
+            b_sequence_filepath,
+            "-c",
+            config_missing_field_filepath,
+        ],
     )
     assert help_result.exit_code == 0
     assert "is missing from the config file" in help_result.output
+
+
+def test_cli_bad_fasta_file_error_handling(
+    a_sequence_filepath, wrong_fasta_no_description, config_filepath
+):
+    runner = CliRunner()
+    help_result = runner.invoke(
+        cli.align,
+        [
+            "-a",
+            a_sequence_filepath,
+            "-b",
+            wrong_fasta_no_description,
+            "-c",
+            config_filepath,
+        ],
+    )
+    assert help_result.exit_code == 0
+    assert "does not start with `>`" in help_result.output

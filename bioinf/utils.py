@@ -8,17 +8,27 @@ class MissingConfigFieldError(Exception):
     """
 
 
+class ImproperFastaFormatError(Exception):
+    """Class representing an improper fasta format error.
+    """
+
+
 def read_sequence(filepath: str) -> Sequence:
     """Reads a protein sequence from the given file.
 
     Arguments:
-        filepath {str} -- file from which the sequence should be read.
+        filepath {str} -- file in FASTA format from which the sequence should be read.
 
     Returns:
         (Sequence) -- sequence retrieved from the file.
     """
     with open(filepath, "r") as f:
-        raw_sequence = f.read()
+        description = f.readline()
+        if not description.startswith(">"):
+            raise ImproperFastaFormatError(
+                f"The description line of file {filepath} does not start with `>`"
+            )
+        raw_sequence = f.read().replace("\n", "")
     return Sequence(raw_sequence)
 
 

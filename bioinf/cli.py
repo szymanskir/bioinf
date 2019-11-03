@@ -23,9 +23,9 @@ def main(args=None):
 @click.option("-c", type=click.Path(exists=True))
 @click.option("-o", type=click.Path())
 def align(a: str, b: str, c: str, o: str):
-    left_sequence: Sequence = read_sequence(a)
-    right_sequence: Sequence = read_sequence(b)
     try:
+        left_sequence: Sequence = read_sequence(a)
+        right_sequence: Sequence = read_sequence(b)
         config = read_config(c)
         algorithm = NeedlemanWunschSequenceAlignmentAlgorithm(config)
         result = algorithm.align(left_sequence, right_sequence)
@@ -34,10 +34,8 @@ def align(a: str, b: str, c: str, o: str):
                 f.write(str(result))
         else:
             click.echo(result)
-    except MissingConfigFieldError as e:
+    except Exception as e:
         click.echo(str(e))
-    except TooLongSequenceError:
-        click.echo(f"One of the input sequences is longer than {config.max_seq_len}.")
 
 
 if __name__ == "__main__":

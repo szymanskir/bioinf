@@ -1,0 +1,7 @@
+Score = 9.0
+Alignments:
+-MARS-
+SMAR-T
+
+-MAR-S
+SMART-
