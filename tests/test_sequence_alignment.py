@@ -20,7 +20,7 @@ from bioinf.sequence_alignment import (
 
 def test_needleman_wunsch_alignment_score():
     config: SequenceAlignmentAlgorithmConfig = SequenceAlignmentAlgorithmConfig(
-        match=5, mismatch=-5, gap=-2, max_seq_len=10, max_number_path=5
+        same=5, diff=-5, gap_penalty=-2, max_seq_length=10, max_number_paths=5
     )
     algorithm: ISequenceAlignmentAlgorithm = NeedlemanWunschSequenceAlignmentAlgorithm(
         config=config
@@ -34,7 +34,7 @@ def test_needleman_wunsch_alignment_score():
 
 def test_needleman_wunsch_too_long_sequence_handling():
     config: SequenceAlignmentAlgorithmConfig = SequenceAlignmentAlgorithmConfig(
-        match=5, mismatch=-5, gap=-2, max_seq_len=2, max_number_path=5
+        same=5, diff=-5, gap_penalty=-2, max_seq_length=2, max_number_paths=5
     )
     algorithm: ISequenceAlignmentAlgorithm = NeedlemanWunschSequenceAlignmentAlgorithm(
         config=config

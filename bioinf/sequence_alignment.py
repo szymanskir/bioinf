@@ -36,18 +36,18 @@ class SequenceAlignmentAlgorithmConfig:
     """Class representing a configuration of a Sequence Alignment Algorithm.
 
     Note: It should contain the following fields:
-            - match (int) - score value for a sequence match
-            - mistmatch (int) - score value for a sequence mismatch
-            - gap (int) - score value for adding a gap
-            - max_seq_len (int) - maximum length of a sequence
-            - max_number_path (int) - maximum number of paths to retrieve
+            - same (int) - score value for a sequence same
+            - diff (int) - score value for a sequence diff
+            - gap_penalty (int) - score value for adding a gap_penalty
+            - max_seq_length (int) - maximum length of a sequence
+            - max_number_paths (int) - maximum number of paths to retrieve
     """
 
-    match: int
-    mismatch: int
-    gap: int
-    max_seq_len: int
-    max_number_path: int
+    same: int
+    diff: int
+    gap_penalty: int
+    max_seq_length: int
+    max_number_paths: int
 
 
 class ISequenceAlignmentAlgorithm(ABC):
@@ -86,20 +86,24 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
         self._config = config
 
     def _validate_sequence(self, left_sequence: Sequence, right_sequence: Sequence):
-        if len(left_sequence) > self._config.max_seq_len:
+        if len(left_sequence) > self._config.max_seq_length:
             raise TooLongSequenceError(
-                f"Left sequence is longer than {self._config.max_seq_len}"
+                f"Left sequence is longer than {self._config.max_seq_length}"
             )
 
-        if len(right_sequence) > self._config.max_seq_len:
+        if len(right_sequence) > self._config.max_seq_length:
             raise TooLongSequenceError(
-                f"Right sequence is longer than {self._config.max_seq_len}"
+                f"Right sequence is longer than {self._config.max_seq_length}"
             )
 
     def _create_score_matrix(self, row_count: int, col_count: int) -> np.array:
         score_matrix: np.array = np.zeros((row_count, col_count))
-        score_matrix[1:, 0] = [self._config.gap * ind for ind in range(1, row_count)]
-        score_matrix[0, 1:] = [self._config.gap * ind for ind in range(1, col_count)]
+        score_matrix[1:, 0] = [
+            self._config.gap_penalty * ind for ind in range(1, row_count)
+        ]
+        score_matrix[0, 1:] = [
+            self._config.gap_penalty * ind for ind in range(1, col_count)
+        ]
         return score_matrix
 
     def _create_adjacency_list(
@@ -117,7 +121,9 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
 
     def _retrieve_paths(self, adjacency_list, row_count, col_count):
         path_finder: PathFinder = PathFinder(
-            adjacency_list, (row_count - 1, col_count - 1), self._config.max_number_path
+            adjacency_list,
+            (row_count - 1, col_count - 1),
+            self._config.max_number_paths,
         )
         paths: List[Path] = path_finder.find_all_paths()
 
@@ -137,15 +143,15 @@ class NeedlemanWunschSequenceAlignmentAlgorithm(ISequenceAlignmentAlgorithm):
         for row in range(1, row_count):
             for col in range(1, col_count):
                 if left_sequence[row - 1] == right_sequence[col - 1]:
-                    diag_weight = self._config.match
+                    diag_weight = self._config.same
                 else:
-                    diag_weight = self._config.mismatch
+                    diag_weight = self._config.diff
 
                 available_score = np.array(
                     [
-                        score_matrix[row, col - 1] + self._config.gap,
+                        score_matrix[row, col - 1] + self._config.gap_penalty,
                         score_matrix[row - 1, col - 1] + diag_weight,
-                        score_matrix[row - 1, col] + self._config.gap,
+                        score_matrix[row - 1, col] + self._config.gap_penalty,
                     ]
                 )
 

@@ -53,7 +53,13 @@ def read_config(filepath: str) -> SequenceAlignmentAlgorithmConfig:
                 f"The {field} field is missing from the config file."
             )
 
-    required_fields = ["match", "mismatch", "gap", "max_seq_len", "max_number_path"]
+    required_fields = [
+        "same",
+        "diff",
+        "gap_penalty",
+        "max_seq_length",
+        "max_number_paths",
+    ]
     config: ConfigParser = ConfigParser()
     config.read(filepath)
 
@@ -61,9 +67,9 @@ def read_config(filepath: str) -> SequenceAlignmentAlgorithmConfig:
         assert_field(field, dict(config["DEFAULT"]))
 
     return SequenceAlignmentAlgorithmConfig(
-        match=config["DEFAULT"].getint("match"),
-        mismatch=config["DEFAULT"].getint("mismatch"),
-        gap=config["DEFAULT"].getint("gap"),
-        max_seq_len=config["DEFAULT"].getint("max_seq_len"),
-        max_number_path=config["DEFAULT"].getint("max_number_path"),
+        same=config["DEFAULT"].getint("same"),
+        diff=config["DEFAULT"].getint("diff"),
+        gap_penalty=config["DEFAULT"].getint("gap_penalty"),
+        max_seq_length=config["DEFAULT"].getint("max_seq_length"),
+        max_number_paths=config["DEFAULT"].getint("max_number_paths"),
     )
