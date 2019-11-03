@@ -10,10 +10,11 @@ Python Implementation of the Needleman-Wunsch algorithm for bioinformatics class
 The package provides a CLI tool for aligning dna sequence using the Needleman-Wunch algorithm. Install the package using the following instructions:
 
 ```
-git clone www.github.com/szymanskir/bioinf
+git clone https://github.com/szymanskir/bioinf
 cd bioinf
 python3.7 -m venv .env
 source .env/bin/activate
+pip install -r requirements_dev.txt
 make install
 ```
 
