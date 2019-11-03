@@ -28,7 +28,7 @@ class SequenceAlignmentResult:
     def __str__(self):
         score_string: str = f"Score = {self.score}"
         alignments_string = [str(alignment) for alignment in self.alignments]
-        return score_string + "\nAlignments:\n" + "\n\n".join(alignments_string)
+        return score_string + "\n\n" + "\n\n".join(alignments_string)
 
 
 @dataclass

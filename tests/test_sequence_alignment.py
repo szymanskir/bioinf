@@ -32,6 +32,20 @@ def test_needleman_wunsch_alignment_score():
     assert result.score == 9
 
 
+def test_needleman_wunsch_alignment_max_number_paths_violation():
+    config: SequenceAlignmentAlgorithmConfig = SequenceAlignmentAlgorithmConfig(
+        same=5, diff=-5, gap_penalty=-2, max_seq_length=10, max_number_paths=1
+    )
+    algorithm: ISequenceAlignmentAlgorithm = NeedlemanWunschSequenceAlignmentAlgorithm(
+        config=config
+    )
+    result: SequenceAlignmentResult = algorithm.align(
+        left_sequence=Sequence("MARS"), right_sequence=Sequence("SMART")
+    )
+    assert len(result.alignments) == 1
+    assert result.score == 9
+
+
 def test_needleman_wunsch_too_long_sequence_handling():
     config: SequenceAlignmentAlgorithmConfig = SequenceAlignmentAlgorithmConfig(
         same=5, diff=-5, gap_penalty=-2, max_seq_length=2, max_number_paths=5

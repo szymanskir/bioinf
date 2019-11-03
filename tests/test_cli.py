@@ -45,10 +45,43 @@ def wrong_fasta_no_description():
     return get_relative_path("resources/wrong_fasta-no_description.txt")
 
 
-def test_cli_too_long_input_error_handling(
+def test_cli_no_output_file(a_sequence_filepath, b_sequence_filepath, config_filepath):
+    runner = CliRunner()
+    help_result = runner.invoke(
+        cli.align,
+        ["-a", a_sequence_filepath, "-b", b_sequence_filepath, "-c", config_filepath],
+    )
+    assert help_result.exit_code == 0
+    assert "Score = 9" in help_result.output
+
+
+def test_cli_output_file(
+    a_sequence_filepath, b_sequence_filepath, config_filepath, tmp_path
+):
+    tmp_file = tmp_path / "result.txt"
+    runner = CliRunner()
+    help_result = runner.invoke(
+        cli.align,
+        [
+            "-a",
+            a_sequence_filepath,
+            "-b",
+            b_sequence_filepath,
+            "-c",
+            config_filepath,
+            "-o",
+            tmp_file,
+        ],
+    )
+    with open(tmp_file, "r") as f:
+        result = f.read()
+    assert help_result.exit_code == 0
+    assert "Score = 9" in result
+
+
+def test_cli_too_long_left_input_error_handling(
     along_sequence_filepath, b_sequence_filepath, config_filepath
 ):
-    """Test the CLI."""
     runner = CliRunner()
     help_result = runner.invoke(
         cli.align,
@@ -57,6 +90,25 @@ def test_cli_too_long_input_error_handling(
             along_sequence_filepath,
             "-b",
             b_sequence_filepath,
+            "-c",
+            config_filepath,
+        ],
+    )
+    assert help_result.exit_code == 0
+    assert "is longer than" in help_result.output
+
+
+def test_cli_too_long_right_input_error_handling(
+    along_sequence_filepath, b_sequence_filepath, config_filepath
+):
+    runner = CliRunner()
+    help_result = runner.invoke(
+        cli.align,
+        [
+            "-a",
+            b_sequence_filepath,
+            "-b",
+            along_sequence_filepath,
             "-c",
             config_filepath,
         ],
