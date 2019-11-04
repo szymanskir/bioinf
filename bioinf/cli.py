@@ -14,9 +14,9 @@ def main(args=None):
 
 
 @main.command()
-@click.option("-a", type=click.Path(exists=True))
-@click.option("-b", type=click.Path(exists=True))
-@click.option("-c", type=click.Path(exists=True))
+@click.option("-a", type=click.Path(exists=True), required=True)
+@click.option("-b", type=click.Path(exists=True), required=True)
+@click.option("-c", type=click.Path(exists=True), required=True)
 @click.option("-o", type=click.Path())
 def align(a: str, b: str, c: str, o: str):
     try:
