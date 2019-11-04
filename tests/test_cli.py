@@ -45,6 +45,16 @@ def wrong_fasta_no_description():
     return get_relative_path("resources/wrong_fasta-no_description.txt")
 
 
+@pytest.fixture
+def config_negative_max_seq_length():
+    return get_relative_path("resources/config_negative_max_seq_length.ini")
+
+
+@pytest.fixture
+def config_negative_max_number_paths():
+    return get_relative_path("resources/config_negative_max_number_paths.ini")
+
+
 def test_cli_no_output_file(a_sequence_filepath, b_sequence_filepath, config_filepath):
     runner = CliRunner()
     help_result = runner.invoke(
@@ -153,3 +163,41 @@ def test_cli_bad_fasta_file_error_handling(
     )
     assert help_result.exit_code == 0
     assert "does not start with `>`" in help_result.output
+
+
+def test_cli_negative_max_seq_length(
+    a_sequence_filepath, b_sequence_filepath, config_negative_max_seq_length
+):
+    runner = CliRunner()
+    help_result = runner.invoke(
+        cli.align,
+        [
+            "-a",
+            a_sequence_filepath,
+            "-b",
+            b_sequence_filepath,
+            "-c",
+            config_negative_max_seq_length,
+        ],
+    )
+    assert help_result.exit_code == 0
+    assert "should be a positive integer" in help_result.output
+
+
+def test_cli_negative_max_number_paths(
+    a_sequence_filepath, b_sequence_filepath, config_negative_max_number_paths
+):
+    runner = CliRunner()
+    help_result = runner.invoke(
+        cli.align,
+        [
+            "-a",
+            a_sequence_filepath,
+            "-b",
+            b_sequence_filepath,
+            "-c",
+            config_negative_max_number_paths,
+        ],
+    )
+    assert help_result.exit_code == 0
+    assert "should be a positive integer" in help_result.output

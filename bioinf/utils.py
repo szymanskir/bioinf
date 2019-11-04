@@ -66,10 +66,22 @@ def read_config(filepath: str) -> SequenceAlignmentAlgorithmConfig:
     for field in required_fields:
         assert_field(field, dict(config["DEFAULT"]))
 
+    same = config["DEFAULT"].getint("same")
+    diff = config["DEFAULT"].getint("diff")
+    gap_penalty = config["DEFAULT"].getint("gap_penalty")
+    max_seq_length = config["DEFAULT"].getint("max_seq_length")
+    max_number_paths = config["DEFAULT"].getint("max_number_paths")
+
+    if max_number_paths < 0:
+        raise MissingConfigFieldError(f"max_number_paths should be a positive integer!")
+
+    if max_seq_length < 0:
+        raise MissingConfigFieldError(f"max_number_paths should be a positive integer!")
+
     return SequenceAlignmentAlgorithmConfig(
-        same=config["DEFAULT"].getint("same"),
-        diff=config["DEFAULT"].getint("diff"),
-        gap_penalty=config["DEFAULT"].getint("gap_penalty"),
-        max_seq_length=config["DEFAULT"].getint("max_seq_length"),
-        max_number_paths=config["DEFAULT"].getint("max_number_paths"),
+        same=same,
+        diff=diff,
+        gap_penalty=gap_penalty,
+        max_seq_length=max_seq_length,
+        max_number_paths=max_number_paths,
     )
